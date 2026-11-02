@@ -1,0 +1,120 @@
+:root {
+  --forest: #2f4a3a;
+  --forest-deep: #223629;
+  --sage: #8fa58a;
+  --sage-soft: #dfe6d8;
+  --cream: #faf7f1;
+  --beige: #efe6d6;
+  --beige-deep: #e2d4bc;
+  /* Accent colour (honey). Others tried:
+     pink:       light #e9c3bf, soft #f6e4e1, main #c07f7a
+     dusty blue: light #b4c4d3, soft #e3eaf0, main #5b7a96 */
+  --accent-light: #e3c88f;
+  --accent-soft: #f3e8cb;
+  --accent: #a87b2f;
+  /* A brighter yellow, used sparingly for little highlights. */
+  --butter: #f5dc7e;
+  --ink: #2b2a26;
+  --muted: #776f63;
+
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Nunito', system-ui, sans-serif;
+
+  --radius: 22px;
+  --shadow: 0 1px 2px rgb(47 74 58 / 0.06), 0 8px 24px -12px rgb(47 74 58 / 0.18);
+}
+
+* { box-sizing: border-box; }
+
+html { background: var(--cream); }
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 10% 0%, var(--accent-soft) 0, transparent 35%),
+    radial-gradient(circle at 95% 20%, var(--sage-soft) 0, transparent 30%),
+    var(--cream);
+  line-height: 1.6;
+  /* Cormorant's default numerals drop below the line (a "3" sits low), so use standard ones. */
+  font-variant-numeric: lining-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--forest); }
+
+h1, h2, h3 {
+  font-family: var(--serif);
+  font-weight: 600;
+  color: var(--forest);
+  line-height: 1.15;
+  margin: 0;
+}
+
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.card {
+  background: rgb(255 255 255 / 0.7);
+  border: 1px solid var(--beige-deep);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+}
+
+.section-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.section-title h2 {
+  font-size: 1.9rem;
+  font-style: italic;
+}
+
+.more-link {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.more-link:hover { text-decoration: underline; }
+
+.pill {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--sage-soft);
+  color: var(--forest);
+}
+
+.muted { color: var(--muted); }
+
+.page-head {
+  padding: 56px 0 32px;
+  text-align: center;
+}
+
+.page-head h1 {
+  font-size: clamp(2.4rem, 6vw, 3.4rem);
+  font-style: italic;
+}
+
+.page-head p {
+  margin: 8px auto 0;
+  max-width: 520px;
+  color: var(--muted);
+}

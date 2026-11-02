@@ -1,0 +1,182 @@
+---
+import { getCollection } from 'astro:content';
+
+const days = (await getCollection('meditation')).map((d) => d.id);
+---
+
+<div class="card calendar" data-calendar>
+  <script type="application/json" data-days set:html={JSON.stringify(days)} />
+  <div class="cal-head">
+    <button type="button" data-prev aria-label="Previous month">‹</button>
+    <h3 data-label></h3>
+    <button type="button" data-next aria-label="Next month">›</button>
+  </div>
+  <div class="cal-grid weekdays" aria-hidden="true">
+    <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+  </div>
+  <div class="cal-grid" data-grid></div>
+  <div class="cal-stats">
+    <div><strong data-month-count>0</strong><span>days this month</span></div>
+    <div><strong data-streak>0</strong><span>day streak</span></div>
+  </div>
+</div>
+
+<script>
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const key = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+
+  document.querySelectorAll<HTMLElement>('[data-calendar]').forEach((root) => {
+    const done = new Set<string>(JSON.parse(root.querySelector('[data-days]')!.textContent || '[]'));
+    const grid = root.querySelector<HTMLElement>('[data-grid]')!;
+    const label = root.querySelector<HTMLElement>('[data-label]')!;
+    const monthCount = root.querySelector<HTMLElement>('[data-month-count]')!;
+    const today = new Date();
+    const todayKey = key(today);
+    let view = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    // Streak counts back from today, or from yesterday if today isn't logged yet.
+    const cursor = new Date(today);
+    if (!done.has(todayKey)) cursor.setDate(cursor.getDate() - 1);
+    let streak = 0;
+    while (done.has(key(cursor))) {
+      streak++;
+      cursor.setDate(cursor.getDate() - 1);
+    }
+    root.querySelector<HTMLElement>('[data-streak]')!.textContent = String(streak);
+
+    function render() {
+      label.textContent = view.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+      grid.innerHTML = '';
+      const offset = (view.getDay() + 6) % 7; // Monday first
+      for (let i = 0; i < offset; i++) grid.append(document.createElement('span'));
+
+      const daysInMonth = new Date(view.getFullYear(), view.getMonth() + 1, 0).getDate();
+      let count = 0;
+      for (let d = 1; d <= daysInMonth; d++) {
+        const date = new Date(view.getFullYear(), view.getMonth(), d);
+        const k = key(date);
+        const cell = document.createElement('span');
+        cell.className = 'day';
+        cell.textContent = String(d);
+        if (done.has(k)) {
+          cell.classList.add('done');
+          cell.title = 'Meditated';
+          count++;
+        } else if (k < todayKey) {
+          cell.classList.add('missed');
+        }
+        if (k === todayKey) cell.classList.add('today');
+        if (k > todayKey) cell.classList.add('future');
+        grid.append(cell);
+      }
+      monthCount.textContent = String(count);
+    }
+
+    root.querySelector('[data-prev]')!.addEventListener('click', () => {
+      view = new Date(view.getFullYear(), view.getMonth() - 1, 1);
+      render();
+    });
+    root.querySelector('[data-next]')!.addEventListener('click', () => {
+      view = new Date(view.getFullYear(), view.getMonth() + 1, 1);
+      render();
+    });
+    render();
+  });
+</script>
+
+<style>
+  .calendar {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .cal-head h3 {
+    font-size: 1.4rem;
+    font-style: italic;
+  }
+
+  .cal-head button {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--beige-deep);
+    background: var(--cream);
+    color: var(--forest);
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .cal-head button:hover { background: var(--beige); }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    text-align: center;
+  }
+
+  .weekdays {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .cal-grid :global(.day) {
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    color: var(--ink);
+  }
+
+  .cal-grid :global(.day.done) {
+    background: var(--forest);
+    color: var(--cream);
+    font-weight: 700;
+  }
+
+  .cal-grid :global(.day.missed) { color: var(--muted); opacity: 0.55; }
+  .cal-grid :global(.day.future) { color: var(--muted); }
+
+  .cal-grid :global(.day.today) {
+    box-shadow: 0 0 0 3px var(--butter), 0 0 0 4px var(--accent);
+  }
+
+  .cal-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 18px;
+  }
+
+  .cal-stats div {
+    background: var(--accent-soft);
+    border-radius: 16px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+
+  .cal-stats strong {
+    display: block;
+    font-family: var(--serif);
+    font-size: 1.8rem;
+    line-height: 1;
+    color: var(--forest);
+  }
+
+  .cal-stats span {
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+</style>

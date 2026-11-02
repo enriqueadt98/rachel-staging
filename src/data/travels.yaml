@@ -1,0 +1,30 @@
+# Your trips. Each one links to its Polarsteps page.
+# Replace the polarsteps links with your real trip links.
+
+- title: Autumn in Seoul
+  places: Seoul
+  emoji: 🍂
+  start: 2026-10-08
+  end: 2026-10-18
+  polarsteps: https://www.polarsteps.com/
+
+- title: Bodorrio en Madrid
+  places: Madrid
+  emoji: 💍
+  start: 2026-06-12
+  end: 2026-06-15
+  polarsteps: https://www.polarsteps.com/
+
+- title: Lisbon weekend
+  places: Lisbon, Sintra
+  emoji: 🚋
+  start: 2026-04-17
+  end: 2026-04-20
+  polarsteps: https://www.polarsteps.com/
+
+- title: Sylwester in Namibia
+  places: Windhoek, Sossusvlei, Swakopmund
+  emoji: 🦒
+  start: 2025-12-27
+  end: 2026-01-05
+  polarsteps: https://www.polarsteps.com/

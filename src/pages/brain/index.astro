@@ -1,0 +1,45 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getBrainNotes } from '../../lib/data';
+import { formatDate } from '../../lib/format';
+
+const notes = await getBrainNotes();
+---
+
+<Base title="Brain" description="Random ideas, notes and things Rachel wants to remember.">
+  <header class="page-head">
+    <h1>The brain</h1>
+    <p>Random ideas, half-thoughts and things I want to remember.</p>
+  </header>
+
+  <div class="notes">
+    {notes.map((n) => (
+      <a class="card note" href={`/brain/${n.id}`}>
+        <span class="muted date">{formatDate(n.data.date)}</span>
+        <h2>{n.data.title}</h2>
+        {n.data.description && <p class="muted">{n.data.description}</p>}
+      </a>
+    ))}
+  </div>
+</Base>
+
+<style>
+  .notes {
+    max-width: 720px;
+    margin: 0 auto;
+    display: grid;
+    gap: 14px;
+  }
+
+  .note {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s;
+  }
+
+  .note:hover { transform: translateX(4px); }
+  .note h2 { font-size: 1.7rem; margin-top: 2px; }
+  .note p { margin: 6px 0 0; }
+  .date { font-size: 0.82rem; }
+</style>

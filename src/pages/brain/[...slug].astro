@@ -1,0 +1,62 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { getBrainNotes } from '../../lib/data';
+import { formatDate } from '../../lib/format';
+
+export async function getStaticPaths() {
+  const notes = await getBrainNotes();
+  return notes.map((note) => ({ params: { slug: note.id }, props: { note } }));
+}
+
+const { note } = Astro.props;
+const { Content } = await render(note);
+---
+
+<Base title={note.data.title} description={note.data.description}>
+  <article class="entry">
+    <a class="more-link" href="/brain">← Back to the brain</a>
+    <header>
+      <span class="muted">{formatDate(note.data.date, { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+      <h1>{note.data.title}</h1>
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .entry {
+    max-width: 680px;
+    margin: 0 auto;
+    padding-top: 40px;
+  }
+
+  header { margin: 24px 0 32px; }
+  header span { font-size: 0.88rem; }
+
+  h1 {
+    font-size: clamp(2.4rem, 6vw, 3.2rem);
+    font-style: italic;
+  }
+
+  .prose { font-size: 1.08rem; }
+  .prose :global(h2) { font-size: 1.8rem; margin: 36px 0 8px; }
+  .prose :global(li) { margin: 4px 0; }
+  .prose :global(li::marker) { color: var(--accent); }
+
+  .prose :global(blockquote) {
+    margin: 28px 0;
+    padding: 16px 22px;
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+    border-radius: 0 16px 16px 0;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.3rem;
+    color: var(--forest);
+  }
+
+  .prose :global(blockquote p) { margin: 0; }
+</style>

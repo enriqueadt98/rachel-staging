@@ -1,0 +1,114 @@
+---
+import Base from '../layouts/Base.astro';
+import { getBooks } from '../lib/data';
+import { formatDate } from '../lib/format';
+
+const { reading, done } = await getBooks();
+const finishedCount = done.filter((b) => b.status === 'finished').length;
+
+// Group past books by the year they were finished (or started, if never finished).
+const byYear = new Map<number, typeof done>();
+for (const b of done) {
+  const year = (b.finished ?? b.started)?.getUTCFullYear() ?? 0;
+  byYear.set(year, [...(byYear.get(year) ?? []), b]);
+}
+const years = [...byYear.entries()].sort((a, b) => b[0] - a[0]);
+---
+
+<Base title="Reading" description="Everything Rachel is reading and has read.">
+  <header class="page-head">
+    <h1>Reading history</h1>
+    <p>{finishedCount} books finished so far, and counting.</p>
+  </header>
+
+  <div class="content">
+    <section>
+      <div class="section-title"><h2>Reading now</h2></div>
+      <ul class="list">
+        {reading.map((b) => (
+          <li class="card row">
+            <div>
+              <h3>{b.title}</h3>
+              <p class="muted">{b.author}</p>
+            </div>
+            {b.started && <span class="pill">since {formatDate(b.started, { day: 'numeric', month: 'short' })}</span>}
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    {years.map(([year, books]) => (
+      <section>
+        <div class="section-title"><h2>{year || 'Undated'}</h2></div>
+        <ul class="list">
+          {books.map((b) => (
+            <li class="card row">
+              <div>
+                <h3>{b.title}</h3>
+                <p class="muted">{b.author}</p>
+                {b.note && <p class="note">“{b.note}”</p>}
+              </div>
+              <div class="meta">
+                {b.status === 'abandoned' ? (
+                  <span class="pill abandoned">set aside</span>
+                ) : (
+                  b.rating && <span class="stars" aria-label={`${b.rating} out of 5`}>{'★'.repeat(b.rating)}<span>{'★'.repeat(5 - b.rating)}</span></span>
+                )}
+                {b.finished && <span class="muted date">{formatDate(b.finished, { month: 'short', year: 'numeric' })}</span>}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+</Base>
+
+<style>
+  .content {
+    max-width: 720px;
+    margin: 0 auto;
+    display: grid;
+    gap: 40px;
+  }
+
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 20px;
+  }
+
+  .row h3 { font-size: 1.35rem; }
+  .row p { margin: 2px 0 0; font-size: 0.9rem; }
+
+  .note {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.05rem !important;
+    color: var(--forest);
+    margin-top: 8px !important;
+  }
+
+  .meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex: none;
+  }
+
+  .stars { color: var(--accent); letter-spacing: 2px; }
+  .stars span { color: var(--beige-deep); }
+  .date { font-size: 0.8rem; }
+  .abandoned { background: var(--beige); color: var(--muted); }
+</style>

@@ -1,0 +1,33 @@
+# Your social posts. Each card links straight to the post.
+# platform: instagram | tiktok | youtube | pinterest
+# New Brain pages show up in the feed automatically, no need to add them here.
+
+- platform: instagram
+  title: New Instagram post
+  date: 2026-11-01
+  url: https://www.instagram.com/
+
+- platform: tiktok
+  title: New TikTok post
+  date: 2026-10-30
+  url: https://www.tiktok.com/
+
+- platform: instagram
+  title: New Instagram post
+  date: 2026-10-26
+  url: https://www.instagram.com/
+
+- platform: tiktok
+  title: New TikTok post
+  date: 2026-10-21
+  url: https://www.tiktok.com/
+
+- platform: instagram
+  title: New Instagram post
+  date: 2026-10-15
+  url: https://www.instagram.com/
+
+- platform: tiktok
+  title: New TikTok post
+  date: 2026-10-09
+  url: https://www.tiktok.com/

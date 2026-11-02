@@ -1,0 +1,30 @@
+# Your goals. Only 3 can be "active" at a time (the site won't build with more).
+# status: active | achieved | let go
+# why (optional): a short line shown under the goal
+
+- title: Move to the US
+  status: active
+  started: 2026-09-01
+
+- title: Learn how Celsius works
+  status: active
+  started: 2026-10-01
+
+- title: Post on Instagram every week
+  status: active
+  started: 2026-09-15
+
+- title: Get a euro boyfriend
+  status: achieved
+  started: 2025-06-01
+  ended: 2026-04-20
+
+- title: Squat 100 kg (220 lb)
+  status: achieved
+  started: 2026-01-10
+  ended: 2026-07-18
+
+- title: Buy property in Dubai
+  status: let go
+  started: 2025-11-01
+  ended: 2026-03-01

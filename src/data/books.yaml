@@ -1,0 +1,27 @@
+# Your reading list. Newest at the top is easiest.
+# status: reading | finished | abandoned
+# rating (optional): 1 to 5
+
+- title: Tiny Experiments
+  author: Anne-Laure Le Cunff
+  status: reading
+  started: 2026-10-20
+
+- title: The Children of Húrin
+  author: J.R.R. Tolkien
+  status: reading
+  started: 2026-10-05
+
+- title: "Strangers: A Memoir of Marriage"
+  author: Belle Burden
+  status: finished
+  started: 2026-08-10
+  finished: 2026-09-02
+  rating: 4
+
+- title: The Power of Now
+  author: Eckhart Tolle
+  status: finished
+  started: 2026-05-01
+  finished: 2026-06-12
+  rating: 5

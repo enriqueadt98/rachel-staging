@@ -1,0 +1,104 @@
+---
+import Base from '../layouts/Base.astro';
+import { getGoals } from '../lib/data';
+import { formatDate } from '../lib/format';
+
+const { active, past } = await getGoals();
+const monthYear = { month: 'short', year: 'numeric' } as const;
+---
+
+<Base title="Goals" description="Rachel’s current goals and the ones that came before.">
+  <header class="page-head">
+    <h1>Goals</h1>
+    <p>Never more than three at a time. Here's what I'm working on, and what came before.</p>
+  </header>
+
+  <div class="content">
+    <section>
+      <div class="section-title"><h2>Right now</h2></div>
+      <ol class="list">
+        {active.map((g, i) => (
+          <li class="card row current">
+            <span class="num">{i + 1}</span>
+            <div>
+              <h3>{g.title}</h3>
+              {g.why && <p class="muted">{g.why}</p>}
+              <p class="muted small">Started {formatDate(g.started, monthYear)}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section>
+      <div class="section-title"><h2>History</h2></div>
+      <ul class="list">
+        {past.map((g) => (
+          <li class="card row">
+            <span class:list={['badge', g.status === 'achieved' ? 'achieved' : 'let-go']} aria-hidden="true">
+              {g.status === 'achieved' ? '✓' : '~'}
+            </span>
+            <div>
+              <h3>{g.title}</h3>
+              <p class="muted small">
+                {g.status === 'achieved' ? 'Achieved' : 'Let go'}
+                {g.ended && ` · ${formatDate(g.started, monthYear)} – ${formatDate(g.ended, monthYear)}`}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .content {
+    max-width: 720px;
+    margin: 0 auto;
+    display: grid;
+    gap: 40px;
+  }
+
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+
+  .row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding: 16px 20px;
+  }
+
+  .row h3 { font-size: 1.35rem; }
+  .row p { margin: 2px 0 0; }
+  .small { font-size: 0.82rem; }
+
+  .current { background: linear-gradient(120deg, rgb(255 255 255 / 0.85), var(--accent-soft)); }
+
+  .num,
+  .badge {
+    flex: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+  }
+
+  .num {
+    background: var(--forest);
+    color: var(--cream);
+    font-family: var(--serif);
+    font-size: 1.3rem;
+  }
+
+  .achieved { background: var(--sage-soft); color: var(--forest); }
+  .let-go { background: var(--beige); color: var(--muted); }
+</style>
